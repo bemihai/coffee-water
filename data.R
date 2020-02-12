@@ -125,7 +125,7 @@ plot_recipe <- function(df) {
     annotate("text", x = 47, y = 180, label = "CDH Ideal Zone", size = 4)
 }
    
-plot_recipe(triple_recipes)
+
   
   
 
