@@ -5,7 +5,6 @@
 *.Rproj
 
 *.xlsx
-*.csv
 
 waters.py
 lease_final_model.rmd
