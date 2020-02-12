@@ -1,5 +1,10 @@
-.Rproj.user
-.Rhistory
-.RData
-.Ruserdata
-.Rproj
+*.Rproj.user
+*.Rhistory
+*.RData
+*.Ruserdata
+*.Rproj
+
+*.xlsx
+*.csv
+waters.py
+lease_final_model.rmd
