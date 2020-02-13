@@ -4,10 +4,8 @@ library(stringr)
 library(ggplot2)
 library(assertthat)
 
-# bottled water raw data - concentrations in mg/L (ppm)
-data <- read_csv('data/raw_water_data.csv') 
 
-# compute chemical composition summary
+# compute chemical composition summary of a water
 chemical_composition <- function(df){
   df <- df %>% 
     mutate(
@@ -22,7 +20,8 @@ chemical_composition <- function(df){
   return(df)
 }
 
-# define SCA accepted ranges
+
+# filter waters within SCA accepted ranges
 sca_filter <- function(water){
   alk  <- water['alkalinity'] >= 20 & water['alkalinity'] <= 80
   hard <- water['hardness'] >= 20 & water['hardness'] <= 200
@@ -32,12 +31,15 @@ sca_filter <- function(water){
 }
 
 
+
 # create a recipe from a list of different bottled waters with coefficients
 create_recipe <- function(data, brands, coefs){
   assert_that(length(brands) == length(coefs),
               msg = 'Number of waters differs from number of coefficients!')
   recipe <- data %>% 
     filter(Brand %in% brands) %>% 
+    mutate(Brand = factor(Brand, ordered = TRUE, levels = brands)) %>% 
+    arrange(Brand) %>% 
     summarise_if(is.numeric, .fun = ~(. %*% coefs)/sum(coefs)) %>% 
     mutate(
       brands = str_c(brands, collapse = ' + '),
@@ -49,52 +51,60 @@ create_recipe <- function(data, brands, coefs){
 }
 
 
-double_recipes <- create_recipe(data, c('Borsec'), c(1)) %>% 
-  filter(brands == "brands")
-
 # get all recipes with 2 ingredients
-for (i in 1:nrow(data)){
-  for (j in 1:nrow(data)) {
-    if (i != j){
-      brands <- c(data[i, 1], data[j, 1])
-      for (c in seq(0.5, 10, 0.5)) {
-        coefs <- c(1, c)
-        recipe <- create_recipe(data, brands, coefs)
-        if (sca_filter(recipe)) {
-          double_recipes <- bind_rows(double_recipes, recipe)
+all_double <- function(data) {
+  
+  double_recipes <- create_recipe(data, c('Bucovina 2L'), c(1)) %>% 
+    filter(brands == "brands")
+  
+  
+  for (i in 1:nrow(data)){
+    for (j in 1:nrow(data)) {
+      if (i != j){
+        brands <- c(data[i, 1], data[j, 1])
+        for (c in seq(0.5, 10, 0.5)) {
+          coefs <- c(1, c)
+          recipe <- create_recipe(data, brands, coefs)
+          if (sca_filter(recipe)) {
+            double_recipes <- bind_rows(double_recipes, recipe)
+          }
         }
       }
     }
   }
+  
+  return(double_recipes)
 }
 
 
-triple_recipes <- create_recipe(data, c('Borsec'), c(1)) %>% 
-  filter(brands == "brands")
-
 # get all recipes with 3 ingredients
-for (i in 1:nrow(data)){
-  for (j in 1:nrow(data)) {
-    for (k in 1:nrow(data)) {
-      if ((i != j) & (j!= k) & (k != i)){
-        brands <- c(data[i, 1], data[j, 1], data[k, 1])
-        for (c1 in seq(0.5, 6, 0.5)) {
-          for (c2 in seq(0.5, 6, 0.5)) {
-            coefs <- c(1, c1, c2)
-            recipe <- create_recipe(data, brands, coefs)
-            if (sca_filter(recipe)) {
-              triple_recipes <- bind_rows(triple_recipes, recipe)
+all_triple <- function(data) {
+  
+  triple_recipes <- create_recipe(data, c('Bucovina 2L'), c(1)) %>% 
+    filter(brands == "brands")
+  
+  
+  for (i in 1:nrow(data)){
+    for (j in 1:nrow(data)) {
+      for (k in 1:nrow(data)) {
+        if ((i != j) & (j!= k) & (k != i)){
+          brands <- c(data[i, 1], data[j, 1], data[k, 1])
+          for (c1 in seq(0.5, 6, 0.5)) {
+            for (c2 in seq(0.5, 6, 0.5)) {
+              coefs <- c(1, c1, c2)
+              recipe <- create_recipe(data, brands, coefs)
+              if (sca_filter(recipe)) {
+                triple_recipes <- bind_rows(triple_recipes, recipe)
+              }
             }
           }
         }
       }
     }
   }
+  return(triple_recipes)
 }
 
-
-all_recipes<- bind_rows(double_recipes, triple_recipes)
-write_csv(all_recipes, 'data/all_recipes.csv')
 
 
 # plot recipes against SCA and CDH ranges
@@ -104,7 +114,7 @@ plot_recipe <- function(df) {
                           hardness   = c(50, 140, 160, 170, 175, 140, 120, 80, 60, 50))
   ratio <- data.frame(alkalinity = c(10, 20, 40, 60, 80, 100, 120)) %>% 
     mutate(hardness = alkalinity * 1.8)
-    
+  
   df %>% 
     ggplot() + 
     geom_segment(aes(x = 40, y = 17, xend = 40, yend = 85), colour = "green", size = 3) +
@@ -124,21 +134,6 @@ plot_recipe <- function(df) {
     annotate("text", x = 57, y = 22, label = "SCA Standard", size = 4) +
     annotate("text", x = 47, y = 180, label = "CDH Ideal Zone", size = 4)
 }
-   
-
-  
-  
-
-
-
-
-
- 
-
-
-
-
-
 
 
 
