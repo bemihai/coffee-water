@@ -8,5 +8,9 @@
 
 waters.py
 lease_final_model.rmd
+data/data.rds
+data/all_recipes.csv
+data/best_recipes.csv
+recipes/
 
 .Rproj.user

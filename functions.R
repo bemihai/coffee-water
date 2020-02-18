@@ -54,7 +54,7 @@ create_recipe <- function(data, brands, coefs){
 # get all recipes with 2 ingredients
 all_double <- function(data) {
   
-  double_recipes <- create_recipe(data, c('Bucovina 2L'), c(1)) %>% 
+  double_recipes <- create_recipe(data, c('Distilled water'), c(1)) %>% 
     filter(brands == "brands")
   
   
@@ -80,7 +80,7 @@ all_double <- function(data) {
 # get all recipes with 3 ingredients
 all_triple <- function(data) {
   
-  triple_recipes <- create_recipe(data, c('Bucovina 2L'), c(1)) %>% 
+  triple_recipes <- create_recipe(data, c('Distilled water'), c(1)) %>% 
     filter(brands == "brands")
   
   
@@ -89,8 +89,8 @@ all_triple <- function(data) {
       for (k in 1:nrow(data)) {
         if ((i != j) & (j!= k) & (k != i)){
           brands <- c(data[i, 1], data[j, 1], data[k, 1])
-          for (c1 in seq(0.5, 6, 0.5)) {
-            for (c2 in seq(0.5, 6, 0.5)) {
+          for (c1 in seq(0.5, 5, 0.5)) {
+            for (c2 in seq(0.5, 5, 0.5)) {
               coefs <- c(1, c1, c2)
               recipe <- create_recipe(data, brands, coefs)
               if (sca_filter(recipe)) {
