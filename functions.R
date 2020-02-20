@@ -4,6 +4,8 @@ library(stringr)
 library(ggplot2)
 library(assertthat)
 
+source('geometry.R')
+
 
 # compute chemical composition summary of a water
 chemical_composition <- function(df){
@@ -13,20 +15,11 @@ chemical_composition <- function(df){
       Ca2 = 2.497 * Ca,                                                       # Calcium hardness (ppm as CaCO3)         
       Mg2 = 4.118 * Mg,                                                       # Magnesium hardness (ppm as CaCO3)
       hardness = Ca2 + Mg2,                                                   # total hardness (ppm as CaCO3)
-      ratio = hardness/alkalinity,                                         # hardness/alkalinity ratio
+      ratio = hardness/alkalinity,                                            # hardness/alkalinity ratio
       ratio = if_else(!is.na(ratio), ratio, 0)
     )
   return(df)
 }
-
-
-# filter waters within SCA accepted ranges
-sca_filter <- function(water){
-  alk  <- water['alkalinity'] >= 20 & water['alkalinity'] <= 60
-  hard <- water['hardness'] >= 40 & water['hardness'] <= 100
-  return(alk & hard)
-}
-
 
 
 # create a recipe from a list of different bottled waters with coefficients
@@ -45,6 +38,82 @@ create_recipe <- function(data, brands, coefs){
     select(brands, parts, everything()) %>% 
     chemical_composition()
   return(recipe)
+}
+
+
+# find double recipes with given alkalinity and hardness in a certain range
+double_recipes <- function(data, target, h_min, h_max) {
+  
+  recipes <- create_recipe(data, c("Distilled water"), c(1)) %>% 
+    filter(brands != "Distilled water")
+  
+  for (i in 1:(nrow(data)-1)) {
+    for (j in (i+1):(nrow(data))) {
+      A <- c(data$alkalinity[i], data$hardness[i])
+      B <- c(data$alkalinity[j], data$hardness[j])
+      # check if there is a recipe like this
+      if (is_segment_sca(A, B, target)) {
+        # compute coordinates of the intersection point
+        t <- compute_segment_sca(A, B, target)
+        coord <- compute_segment_coord(A, B, t)
+        # check if hardness is inside the range
+        if (coord[2] >= h_min & coord[2] <= h_max) {
+          t <- round(t, 2)
+          recipe <- create_recipe(data, c(data$Brand[i], data$Brand[j]), c(t, 1-t))
+          recipes <- bind_rows(recipes, recipe)
+        }
+      }
+    }
+  }
+  return(recipes)
+}
+
+
+# find double recipes with given alkalinity and hardness in a certain range
+triple_recipes <- function(data, target, h_min, h_max) {
+  
+  recipes <- create_recipe(data, c("Distilled water"), c(1)) %>% 
+    filter(brands != "Distilled water")
+  
+  for (i in 1:(nrow(data)-2)) {
+    for (j in (i+1):(nrow(data)-1)) {
+      for (k in (j+1):(nrow(data))) {
+        
+        A <- c(data$alkalinity[i], data$hardness[i])
+        B <- c(data$alkalinity[j], data$hardness[j])
+        C <- c(data$alkalinity[k], data$hardness[k])
+        
+        # check if the triangle is not trivial (area > 2000)
+        if (is_triangle(A, B, C, 2000)) {
+          # check if there is a recipe like this
+          if (is_triangle_sca(A, B, C, target)) {
+            # compute coordinates of the intersection segment
+            segment <- compute_triangle_sca(A, B, C, target)
+            # choose 3 hardness values on the segment 
+            sh_min <- min(segment[2], segment[4])
+            sh_max <- max(segment[2], segment[4])
+            h_values <- seq(sh_min, sh_max, length.out = 5)[2:4]
+            # keep only those inside the range
+            h_values <- h_values[h_values >= h_min & h_values <= h_max]
+            # for each value, compute baricentic coordinates 
+            for (h_val in h_values) {
+              b <- compute_baricentric(A, B, C, c(target, h_val))
+              # filter contribution > 5%
+              if (min(b)>0.05) {
+                b1 <- round(b[1], 2)
+                b2 <- round(b[2], 2)
+                b <- c(b1, b2, round(1 - b1 - b2, 2))
+                # create recipe
+                recipe <- create_recipe(data, c(data$Brand[i], data$Brand[j], data$Brand[k]), b)
+                recipes <- bind_rows(recipes, recipe)
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+  return(recipes)
 }
 
 
@@ -78,8 +147,8 @@ plot_recipe <- function(df) {
     geom_point(aes(x = alkalinity, y = hardness), shape = 1, size = 2.5) +
     geom_line(data = ratio, aes(x = alkalinity, y = hardness), linetype="dotted") +
     geom_path(data = chd_ideal, aes(x = alkalinity, y = hardness), color = "red", size = 1) +
-    scale_x_continuous(name = "Alkalinity (ppm CaCO3)", limits = c(0, 220), breaks = seq(0, 220, 20)) + 
-    scale_y_continuous(name = "Total Hardness (ppm CaCO3)", limits = c(0, 340), breaks = seq(0, 340, 20)) +
+    scale_x_continuous(name = "Alkalinity (ppm CaCO3)", limits = c(0, 120), breaks = seq(0, 120, 20)) + 
+    scale_y_continuous(name = "Total Hardness (ppm CaCO3)", limits = c(0, 240), breaks = seq(0, 240, 20)) +
     annotate("text", x = 15, y = 0, label = "weak, sour, sharp") +
     annotate("text", x = 15, y = 10, label = "under-extracted") +
     annotate("text", x = 105, y = 0, label = "weak, chalky, flat") +
@@ -124,59 +193,7 @@ plot_recipe <- function(df) {
 
 
 
-# # get all recipes with 3 ingredients
-# all_triple <- function(data) {
-#   
-#   triple_recipes <- create_recipe(data, c('Distilled water'), c(1)) %>% 
-#     filter(brands == "brands")
-#   
-#   for (i in 1:nrow(data)){
-#     for (j in 1:nrow(data)) {
-#       for (k in 1:nrow(data)) {
-#         if ((i != j) & (j!= k) & (k != i)){
-#           brands <- c(data[i, 1], data[j, 1], data[k, 1])
-#           for (c1 in seq(0.25, 5, 0.25)) {
-#             for (c2 in seq(0.25, 5, 0.25)) {
-#               coefs <- c(1, c1, c2)
-#               recipe <- create_recipe(data, brands, coefs)
-#               if (sca_filter(recipe)) {
-#                 triple_recipes <- bind_rows(triple_recipes, recipe)
-#               }
-#             }
-#           }
-#         }
-#       }
-#     }
-#   }
-#   
-#   return(triple_recipes)
-# }
 
-
-# # get all recipes with 2 ingredients
-# all_double <- function(data) {
-#   
-#   double_recipes <- create_recipe(data, c('Distilled water'), c(1)) %>% 
-#     filter(brands == "brands")
-#   
-#   
-#   for (i in 1:nrow(data)){
-#     for (j in 1:nrow(data)) {
-#       if (i != j){
-#         brands <- c(data[i, 1], data[j, 1])
-#         for (c in seq(0.25, 10, 0.25)) {
-#           coefs <- c(1, c)
-#           recipe <- create_recipe(data, brands, coefs)
-#           if (sca_filter(recipe)) {
-#             double_recipes <- bind_rows(double_recipes, recipe)
-#           }
-#         }
-#       }
-#     }
-#   }
-#   
-#   return(double_recipes)
-# }
 
 
 

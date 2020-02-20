@@ -12,5 +12,6 @@ data/data.rds
 data/all_recipes.csv
 data/best_recipes.csv
 recipes/
+data_laurentiu.csv
 
 .Rproj.user

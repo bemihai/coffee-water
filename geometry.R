@@ -1,3 +1,4 @@
+
 library(dplyr)
 library(ggplot2)
 library(assertthat)
@@ -34,24 +35,9 @@ compute_segment_coord <- function(A, B, t) {
 }
 
 
-A <- c(0, 0)        # distilled
-B <- c(20, 171)     # smart 
-C <- c(203, 317)    # vittel 
-D <- c(10, 60)      
-X <- c(180, 180)
-Y <- c(240, 245)
 
-is_segment_sca(A, B, 40)
-is_segment_sca(A, C, 40)
-is_segment_sca(B, C, 40)
 
-compute_segment_sca(A, B, 40)
-compute_segment_sca(A, C, 40) 
-compute_segment_sca(B, C, 40) 
 
-compute_segment_coord(A, B, compute_segment_sca(A, B, 40))
-compute_segment_coord(A, C, compute_segment_sca(A, C, 40))
-compute_segment_coord(B, C, compute_segment_sca(B, C, 40))
 
 
 # check if three point for a non-trivial triangle (area > delta)
@@ -64,9 +50,6 @@ is_triangle <- function(A, B, C, delta) {
     }
 }
 
-
-is_triangle(A, B, C, 1000)
-is_triangle(A, B, D, 1000)
 
 # check if a triangle [A, B, C] intersects a target alkalinity line x = target (parallel to Oy)
 is_triangle_sca <- function(A, B, C, x){
@@ -91,25 +74,14 @@ compute_triangle_sca <- function(A, B, C, x) {
 }
 
 
-is_triangle_sca(A, B, C, 40)
-is_triangle_sca(A, B, D, 40)
-
-compute_triangle_sca(A, B, C, 40)
-compute_triangle_sca(A, B, D, 40)
-
-
 # compute baricentric coordinates for a point P relative to a triangle (A, B, C)
 compute_baricentric <- function(A, B, C, P){
   matrix <- rbind(c(A[1], B[1], C[1]), c(A[2], B[2], C[2]), c(1, 1, 1))
-  matrix_inv <- solve(T)
+  matrix_inv <- solve(matrix)
   polar_coord <- rbind(c(P[1]), c(P[2]), 1)
-  bari_coord <- matrix_inv %*% polar_coord
+  bari_coord <- as.vector(matrix_inv %*% polar_coord)
   return(bari_coord)
 }
-
-
-compute_baricentric(A, B, C, c(40, 68))
-
 
 
 
