@@ -1,6 +1,8 @@
 
 # Use ShinyDashboard
 library(shinydashboard)
+library(dplyr)
+library(readr)
 
 data <- read_csv("data/raw_water_data.csv")
 brands <- data$Brand
