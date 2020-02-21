@@ -5,6 +5,8 @@
 *.Rproj
 
 *.xlsx
+rsconnect/
+
 
 waters.py
 lease_final_model.rmd
