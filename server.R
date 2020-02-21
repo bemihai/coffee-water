@@ -9,7 +9,7 @@ library(ggplot2)
 source("functions.R")
 
 
-load data
+# load data
 full_data <- readRDS("data\\data.rds") %>%
   rename_all(tolower) %>%
   mutate(pca_seg = ifelse(pca_seg == "lease", "prior 12M lease", "prior 12M non-lease")) %>%
