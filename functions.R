@@ -26,6 +26,8 @@ chemical_composition <- function(df){
 create_recipe <- function(data, brands, coefs){
   assert_that(length(brands) == length(coefs),
               msg = 'Number of waters differs from number of coefficients!')
+  assert_that(length(unique(brands)) == length(brands),
+              msg = 'Choose different waters!')
   recipe <- data %>% 
     filter(Brand %in% brands) %>% 
     mutate(Brand = factor(Brand, ordered = TRUE, levels = brands)) %>% 
@@ -117,48 +119,48 @@ triple_recipes <- function(data, target, h_min, h_max) {
 }
 
 
-plot_water <- function(df) {
+plot_waters <- function(df, max_alk, max_hard) {
   
-  diag <- data.frame(a = c(0, 320)) 
-  
-  df %>% 
+  plot <- df %>% 
     ggplot() + 
-    geom_segment(aes(x = 40, y = 17, xend = 40, yend = 85), colour = "green", size = 3.5) +
-    geom_point(aes(x = 40, y = 68), color = "red", shape = 18, size = 3) +
     geom_point(aes(x = alkalinity, y = hardness), shape = 18, size = 2.5) +
-    geom_text(aes(x = alkalinity, y = hardness, label=Brand),hjust=0, vjust=0, size = 3) +
-    geom_line(data = diag, aes(x = a, y = a), linetype="dotted", color = "red") +
-    scale_x_continuous(name = "Alkalinity (ppm CaCO3)", limits = c(0, 320), breaks = seq(0, 320, 20)) + 
-    scale_y_continuous(name = "Total Hardness (ppm CaCO3)", limits = c(0, 340), breaks = seq(0, 340, 20))
+    geom_text(aes(x = alkalinity, y = hardness, label=Brand),hjust=-0.1, vjust=0, size = 3) +
+    scale_x_continuous(name = "Alkalinity (ppm CaCO3)", limits = c(0, max_alk), breaks = seq(0, max_alk, 10)) + 
+    scale_y_continuous(name = "Total Hardness (ppm CaCO3)", limits = c(0, max_hard), breaks = seq(0, max_hard, 20))
+  
+  return(plot)
 }
 
 
 # plot recipes against SCA and CDH ranges
-plot_recipe <- function(df) {
+plot_recipes <- function(df) {
   
   chd_ideal <- data.frame(alkalinity = c(38, 40,  41,  50,  75,  71,  69,  60, 50, 38), 
                           hardness   = c(50, 140, 160, 170, 175, 140, 120, 80, 60, 50))
+  
   ratio <- data.frame(alkalinity = c(10, 20, 40, 60, 80, 100, 120)) %>% 
     mutate(hardness = alkalinity * 1.8)
   
-  df %>% 
+  plot <- df %>% 
     ggplot() + 
     geom_segment(aes(x = 40, y = 17, xend = 40, yend = 85), colour = "green", size = 3) +
     geom_point(aes(x = alkalinity, y = hardness), shape = 1, size = 2.5) +
     geom_line(data = ratio, aes(x = alkalinity, y = hardness), linetype="dotted") +
     geom_path(data = chd_ideal, aes(x = alkalinity, y = hardness), color = "red", size = 1) +
-    scale_x_continuous(name = "Alkalinity (ppm CaCO3)", limits = c(0, 120), breaks = seq(0, 120, 20)) + 
+    scale_x_continuous(name = "Alkalinity (ppm CaCO3)", limits = c(0, 120), breaks = seq(0, 120, 10)) + 
     scale_y_continuous(name = "Total Hardness (ppm CaCO3)", limits = c(0, 240), breaks = seq(0, 240, 20)) +
-    annotate("text", x = 15, y = 0, label = "weak, sour, sharp") +
-    annotate("text", x = 15, y = 10, label = "under-extracted") +
-    annotate("text", x = 105, y = 0, label = "weak, chalky, flat") +
-    annotate("text", x = 105, y = 10, label = "under-extracted") +
-    annotate("text", x = 15, y = 230, label = "heavy, dull, sour") +
-    annotate("text", x = 15, y = 240, label = "over-extracted") +
-    annotate("text", x = 105, y = 230, label = "weak, chalky, flat") +
-    annotate("text", x = 105, y = 240, label = "over-extracted") +
-    annotate("text", x = 57, y = 22, label = "SCA Standard", size = 4) +
+    annotate("text", x = 10, y = 0, label = "weak, sour, sharp") +
+    annotate("text", x = 10, y = 10, label = "under-extracted") +
+    annotate("text", x = 115, y = 0, label = "weak, chalky, flat") +
+    annotate("text", x = 115, y = 10, label = "under-extracted") +
+    annotate("text", x = 10, y = 230, label = "heavy, dull, sour") +
+    annotate("text", x = 10, y = 240, label = "over-extracted") +
+    annotate("text", x = 115, y = 230, label = "weak, chalky, flat") +
+    annotate("text", x = 115, y = 240, label = "over-extracted") +
+    annotate("text", x = 50, y = 22, label = "SCA Standard", size = 4) +
     annotate("text", x = 47, y = 180, label = "CDH Ideal Zone", size = 4)
+  
+  return(plot)
 }
 
 

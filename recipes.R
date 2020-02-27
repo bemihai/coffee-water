@@ -10,20 +10,25 @@ source('functions.R')
 data <- read_csv('data/raw_water_data.csv')  %>% 
   chemical_composition()
 
+diag <- data.frame(a = c(0, 320)) 
 
 # saveRDS(recipes, "data\\recipes.rds")
 data %>% 
-  plot_water()
+  plot_waters() +
+  geom_segment(aes(x = 40, y = 17, xend = 40, yend = 85), colour = "green", size = 3.5) +
+  geom_point(aes(x = 40, y = 68), color = "red", shape = 18, size = 3) +   
+  geom_line(data = diag, aes(x = a, y = a), linetype="dotted", color = "red") 
+
 
 
 dbl_recipes <- double_recipes(data, 40, 40, 150)
 trpl_recipes <- triple_recipes(data, 40, 40, 150)
 
 dbl_recipes %>% 
-  plot_recipe()
+  plot_recipes()
 
 trpl_recipes %>% 
-  plot_recipe()
+  plot_recipes()
 
 
 bind_rows(dbl_recipes, trpl_recipes) %>% 

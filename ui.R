@@ -1,5 +1,5 @@
 
-
+library(shinyalert)
 library(shinydashboard)
 library(dplyr)
 library(readr)
@@ -22,12 +22,14 @@ ui <- dashboardPage(
     
     dashboardBody(
         
+        useShinyalert(),
+        
         tabItems(
             
             tabItem(tabName = "manual_calc",
                     h2("Manual recipe calculator"),
+                    h4("Select bottled waters from the dropdown menu and input their proportions (must sum up to 100)."),
                     br(),
-                    h4("Select bottled waters from the dropdown menu and input their proportions."),
                     
                     fluidRow(
                         
@@ -41,8 +43,8 @@ ui <- dashboardPage(
                             title = "First water",
                             status = "primary",
                             solidHeader = TRUE,
-                            selectInput("first_water", label = NULL, choices = brands, selected = "Distilled water"),
-                            numericInput("first_coef", label = "Proportion %", 40, min = 0, max = 100, step = 1)
+                            selectInput("first_water", label = NULL, choices = brands, selected = "Smart Water"),
+                            numericInput("first_coef", label = "Proportion %", 25, min = 0, max = 100, step = 1)
                         ),
                         
                         box(
@@ -50,8 +52,8 @@ ui <- dashboardPage(
                             title = "Second water",
                             status = "primary",
                             solidHeader = TRUE,
-                            selectInput("second_water", label = NULL, choices = brands, selected = "Distilled water"),
-                            numericInput("second_coef", label = "Proportion %", 40, min = 0, max = 100, step = 1)
+                            selectInput("second_water", label = NULL, choices = brands, selected = "Bucovina"),
+                            numericInput("second_coef", label = "Proportion %", 37.5, min = 0, max = 100, step = 1)
                         ),
                         
                         box(
@@ -59,27 +61,27 @@ ui <- dashboardPage(
                             title = "Third water",
                             status = "primary",
                             solidHeader = TRUE,
-                            selectInput("third_water", label = NULL, choices = brands, selected = "Distilled water"),
-                            numericInput("third_coef", label = "Proportion %", 20, min = 0, max = 100, step = 1)
+                            selectInput("third_water", label = NULL, choices = brands, selected = "Izvorul Minunilor"),
+                            numericInput("third_coef", label = "Proportion %", 37.5, min = 0, max = 100, step = 1)
                         ),
                         
                         box(
                             width = 3,
                             status = "success",
                             solidHeader = TRUE,
-                            actionButton("calc_recipe", label =  "Calculate recipe",  class = "estimation_button"),
-                            actionButton("save_recipe", label =  "Save to CSV", class = "estimation_button")
+                            actionButton("calc_recipe", icon("calculator"), label =  "Calculate recipe",  class = "estimation_button"),
+                            downloadButton("save_recipe", "Save recipe to CSV", class = "estimation_button")
                             
                         )
                     ),
                     
-
+                    
                     fluidRow(
                         
                         valueBoxOutput("alkalinity", width = 2),
                         valueBoxOutput("hardness", width = 2),
-                        valueBoxOutput("magnesium", width = 2),
                         valueBoxOutput("calcium", width = 2),
+                        valueBoxOutput("magnesium", width = 2),
                         valueBoxOutput("tds", width = 2),
                         valueBoxOutput("ph", width = 2)
                     ),
@@ -88,7 +90,7 @@ ui <- dashboardPage(
                     fluidRow(
                         
                         box(
-                            title = "Compare to ingredients",
+                            title = "Compare to starting ingredients",
                             solidHeader = TRUE,
                             status = "primary",
                             width = 6,
@@ -96,7 +98,7 @@ ui <- dashboardPage(
                         ),
                         
                         box(
-                            title = "Compare to SCA standards",
+                            title = "Compare to SCA standards and CDH Ideal Zone",
                             solidHeader = TRUE,
                             status = "primary",
                             width = 6,
@@ -141,7 +143,7 @@ ui <- dashboardPage(
                     fluidRow(
                         box(
                             width = 9,
-                            DT::DTOutput("leads_table")
+                            DT::DTOutput("recipe_table")
                         )
                     )
         
