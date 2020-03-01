@@ -8,7 +8,7 @@ library(shinyalert)
 
 source("functions.R")
 
-data <- read_csv("data/raw_water_data.csv") %>% 
+data <- read_csv("data/raw_water_Romania.csv") %>% 
   chemical_composition()
 
  

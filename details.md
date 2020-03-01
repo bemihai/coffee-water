@@ -31,7 +31,8 @@ The (total) hardness of water is given by the sum of $Ca^{2+}$ and $Mg^{2+}$ ion
 
 For water with total hardness greater than alkalinity, we have the following componence:
 
-- diagram on section 3.2
+<img src="data/diagram.png" width="30%" />
+
 
 For coffee extraction, the alkalinity influences the acid buffer capacity, while the hardness influences the extraction efficiency. 
 
@@ -97,7 +98,7 @@ The ideal water for coffee extraction according to SCAA, 2009:
 
 Collona-Dashwood and Hendon (2014) propose an ideal zone for alkalinity/hardness:
 
-![](details_files/figure-html/unnamed-chunk-1-1.png)<!-- -->
+<img src="details_files/figure-html/unnamed-chunk-2-1.png" width="30%" />
 
 
 #### Espresso extraction 
@@ -105,7 +106,6 @@ Collona-Dashwood and Hendon (2014) propose an ideal zone for alkalinity/hardness
 The acid buffer effect of bicarbonates is much lower in espresso than in filter, since the mass ratio is much bigger: 1:2 for espresso compared to 1:15 for filter. Moreover, extraction pressure increases the solubility of $CO_2$ and this increases the acidity. 
 
 Higher alkalinity and hardness might still give a high quality extraction. At high alkalinity ($>\; 100 \; ppm \; CaCO_3$), more acids extracted from coffee are neutralized by ${HCO_3}^{-}$ and high pressure and temperature increase the formation of $CO_2$ which in turn increases the resistance of the coffee bed.  
-
 
 
 

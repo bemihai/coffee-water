@@ -4,7 +4,9 @@ library(shinydashboard)
 library(dplyr)
 library(readr)
 
-brands <- read_csv("data/raw_water_data.csv") %>% 
+xml2::write_html(rvest::html_node(xml2::read_html("details.html"), "body"), file = "details_fixed.html")
+
+brands <- read_csv("data/raw_water_Romania.csv") %>% 
     pull(Brand)
 
 
