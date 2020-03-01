@@ -178,30 +178,62 @@ shinyServer(function(input, output) {
   
   ###################################################################################
   
+  null_recipes <- create_recipe(data, c("Distilled water"), c(1)) %>% 
+    filter(Brands != "Distilled water") %>% 
+    rename(Alkalinity = alkalinity, Hardness = hardness, Ratio = ratio, `Parts %` = Parts)
   
-  # observeEvent(input$calc_recipe, {
-  #   
-  #   # Add progress bar and increase to 0.5
-  #   withProgress(message = 'Please wait', detail = 'Gathering data', value = 0.5,
-  #                {
-  #                  
-  #                  # Increase progress bar to 0.8
-  #                  incProgress(0.8, detail = "Storing results")
-  #                  
-  #                  
-  #                  # Increase progress bar to 1
-  #                  incProgress(1, detail = "Finish")
-  #                })
-  # })
+  recipes <- reactiveValues(recipes = null_recipes)
   
   
+  observeEvent(input$find_recipe, {
 
+    # Add progress bar and increase to 0.5
+    withProgress(message = 'Please wait', detail = 'Checking data', value = 0.2,
+                 {
+                   
+                   
+                   if (input$target_alk * input$min_hard * input$max_hard <= 0) {
+                     shinyalert("Invalid alkalinity or hardness.", type = "warning")
+                   }
+                   
+                   if (input$min_hard > input$max_hard) {
+                     shinyalert("Hardness values are not correct.", type = "warning")
+                   }
+                   
+                   if (input$target_alk > max(data$alkalinity)) {
+                     shinyalert("Alkalinity is too big.", type = "warning")
+                   }
+                   
+                   if (input$min_hard > max(data$hardness) | input$max_hard > max(data$hardness)) {
+                     shinyalert("Hardness is too big.", type = "warning")
+                   }
 
-  output$recipe_table <- DT::renderDataTable(data,
-                                             extensions = 'Buttons',
-                                             options = list(dom = "Blfrtip",
-                                                            buttons = list("excel", "csv"),
-                                                            pageLength = 15))
+                   incProgress(0.5, detail = "Compute recipes with 2 waters")
+                   dbl_recipes <- double_recipes(data, input$target_alk, input$min_hard, input$max_hard)
+              
+                   incProgress(0.8, detail = "Compute recipes with 3 waters")
+                   trpl_recipes <- triple_recipes(data, input$target_alk, input$min_hard, input$max_hard)
+                   
+                   incProgress(1, detail = "Finish")
+                   recipes$recipes <- bind_rows(dbl_recipes, trpl_recipes) %>% 
+                     rename(Alkalinity = alkalinity, Hardness = hardness, Ratio = ratio, `Parts %` = Parts) %>% 
+                     mutate_if(is.numeric, list(~round(., 1))) %>% 
+                     mutate_at(vars(TDS, Alkalinity, Hardness), list(round)) %>% 
+                     arrange(Hardness)
+                 })
+  })
+  
+  
+  output$recipe_table <- DT::renderDataTable(recipes$recipes, options = list(dom = "Blfrtip", pageLength = 10))
+  
+  output$save_found_recipes <- downloadHandler(
+    filename = function() {
+      paste("alk ", input$target_alk, " ", "hard ", input$min_hard, "-", input$max_hard, ".csv", sep = "")
+    },
+    content = function(file) {
+      write_csv(recipes$recipes, file)
+    }
+  )
   
   
 })

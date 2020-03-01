@@ -6,6 +6,7 @@
 
 *.xlsx
 rsconnect/
+details_files/
 
 
 waters.py

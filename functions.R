@@ -34,10 +34,10 @@ create_recipe <- function(data, brands, coefs){
     arrange(Brand) %>% 
     summarise_if(is.numeric, .fun = ~(. %*% coefs)/sum(coefs)) %>% 
     mutate(
-      brands = str_c(brands, collapse = ' + '),
-      parts = str_c(coefs, collapse = ' + '),
+      Brands = str_c(brands, collapse = ' + '),
+      Parts = str_c(paste(100*coefs, "%"), collapse = ' + '),
     ) %>% 
-    select(brands, parts, everything()) %>% 
+    select(Brands, Parts, everything()) %>% 
     chemical_composition()
   return(recipe)
 }
@@ -47,7 +47,7 @@ create_recipe <- function(data, brands, coefs){
 double_recipes <- function(data, target, h_min, h_max) {
   
   recipes <- create_recipe(data, c("Distilled water"), c(1)) %>% 
-    filter(brands != "Distilled water")
+    filter(Brands != "Distilled water")
   
   for (i in 1:(nrow(data)-1)) {
     for (j in (i+1):(nrow(data))) {
@@ -75,7 +75,7 @@ double_recipes <- function(data, target, h_min, h_max) {
 triple_recipes <- function(data, target, h_min, h_max) {
   
   recipes <- create_recipe(data, c("Distilled water"), c(1)) %>% 
-    filter(brands != "Distilled water")
+    filter(Brands != "Distilled water")
   
   for (i in 1:(nrow(data)-2)) {
     for (j in (i+1):(nrow(data)-1)) {
@@ -91,10 +91,10 @@ triple_recipes <- function(data, target, h_min, h_max) {
           if (is_triangle_sca(A, B, C, target)) {
             # compute coordinates of the intersection segment
             segment <- compute_triangle_sca(A, B, C, target)
-            # choose 3 hardness values on the segment 
+            # choose 5 hardness values on the segment 
             sh_min <- min(segment[2], segment[4])
             sh_max <- max(segment[2], segment[4])
-            h_values <- seq(sh_min, sh_max, length.out = 5)[2:4]
+            h_values <- seq(sh_min, sh_max, length.out = 7)[2:6]
             # keep only those inside the range
             h_values <- h_values[h_values >= h_min & h_values <= h_max]
             # for each value, compute baricentic coordinates 

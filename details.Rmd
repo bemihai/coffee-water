@@ -1,0 +1,83 @@
+---
+title: "Water for Coffee"
+output: 
+  html_document:
+    keep_md: yes
+---
+
+```{r setup, include=FALSE}
+library(dplyr)
+library(readr)
+library(stringr)
+library(ggplot2)
+
+knitr::opts_chunk$set(echo = FALSE, message = FALSE, warning =FALSE)
+source('functions.R')
+```
+
+
+## Water for Coffee
+
+Details on how to choose the best water for coffee.  
+
+### Bottled waters
+
+```{r, fig.width=8}
+# bottled water raw data - concentrations in mg/L (ppm)
+data <- read_csv('data/raw_water_data.csv')  %>% 
+  chemical_composition()
+
+diag <- data.frame(a = c(0, 320)) 
+
+# saveRDS(recipes, "data\\recipes.rds")
+data %>% 
+  plot_waters(320, 380) +
+  geom_segment(aes(x = 40, y = 17, xend = 40, yend = 85), colour = "green", alpha = 0.05, size = 3.5) +
+  geom_point(aes(x = 40, y = 68), color = "red", shape = 18, size = 3) +   
+  geom_line(data = diag, aes(x = a, y = a), linetype="dotted", color = "red") 
+```
+
+
+### Two waters
+
+
+```{r, fig.width=8}
+
+dbl_recipes <- double_recipes(data, 40, 40, 150)
+
+
+dbl_recipes %>% 
+  plot_recipes()
+```
+
+
+### Three waters
+
+```{r, fig.width=8}
+trpl_recipes <- triple_recipes(data, 40, 40, 150)
+
+trpl_recipes %>% 
+  plot_recipes()
+```
+
+
+
+```{r, eval=FALSE}
+bind_rows(dbl_recipes, trpl_recipes) %>%
+  write_csv('recipes/recipes.csv')
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
