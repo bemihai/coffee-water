@@ -1,7 +1,6 @@
 ---
 output: 
-  html_document:
-    keep_md: yes
+  html_document
 ---
 
 ```{r setup, include=FALSE}
@@ -39,6 +38,7 @@ If $pH < 8.3$, the alkalinity is equal to the amount of ${HCO_3}^-$, the other c
 The (total) hardness of water is given by the sum of $Ca^{2+}$ and $Mg^{2+}$ ions (in amount/concentration). The carbonate hardness represents the minimum of total hardness and alkalinity. 
 
 For water with total hardness greater than alkalinity, we have the following componence:
+
 
 ```{r, out.width = '30%'}
 knitr::include_graphics("data/diagram.png")
