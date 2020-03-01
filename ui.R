@@ -164,7 +164,7 @@ ui <- dashboardPage(
             tabItem(
                 
                 tabName = "details",
-                includeMarkdown("details.md")
+                includeHTML("details_fixed.html")
             )
             
         )
