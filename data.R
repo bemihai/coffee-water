@@ -6,7 +6,7 @@ library(ggplot2)
 source('functions.R')
 
 # bottled water raw data - concentrations in mg/L (ppm)
-data <- read_csv('data/raw_water_data.csv')  %>% 
+data <- read_csv('data/raw_water_Romania.csv')  %>% 
   chemical_composition()
 
 

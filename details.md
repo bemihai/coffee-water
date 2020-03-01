@@ -31,7 +31,8 @@ The (total) hardness of water is given by the sum of $Ca^{2+}$ and $Mg^{2+}$ ion
 
 For water with total hardness greater than alkalinity, we have the following componence:
 
-- diagram on section 3.2
+<img src="data/diagram.png" width="60%" style="display: block; margin: auto;" />
+
 
 For coffee extraction, the alkalinity influences the acid buffer capacity, while the hardness influences the extraction efficiency. 
 
@@ -97,7 +98,7 @@ The ideal water for coffee extraction according to SCAA, 2009:
 
 Collona-Dashwood and Hendon (2014) propose an ideal zone for alkalinity/hardness:
 
-![](details_files/figure-html/unnamed-chunk-1-1.png)<!-- -->
+<img src="details_files/figure-html/unnamed-chunk-2-1.png" width="60%" style="display: block; margin: auto;" />
 
 
 #### Espresso extraction 
