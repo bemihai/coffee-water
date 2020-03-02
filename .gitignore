@@ -7,6 +7,7 @@
 *.xlsx
 rsconnect/
 details_files/
+*.dcf
 
 
 waters.py
