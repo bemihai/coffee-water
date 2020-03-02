@@ -17,8 +17,8 @@ ui <- dashboardPage(
     dashboardSidebar(
         sidebarMenu(
             menuItem("Calculator", tabName = "manual_calc", icon = icon("calculator")),
-            menuItem("Find waters", tabName = "target_calc", icon = icon("bar-chart")),
-            menuItem("Details", tabName = "details", icon = icon("info"))
+            menuItem("Find waters", tabName = "target_calc", icon = icon("bar-chart"))
+            # menuItem("Details", tabName = "details", icon = icon("info"))
         )
     ),
     
@@ -47,7 +47,7 @@ ui <- dashboardPage(
                             status = "primary",
                             solidHeader = TRUE,
                             selectInput("first_water", label = NULL, choices = brands, selected = "Smart Water"),
-                            numericInput("first_coef", label = "Proportion %", 25, min = 0, max = 100, step = 1)
+                            numericInput("first_coef", label = "Proportion %", 20, min = 0, max = 100, step = 1)
                         ),
                         
                         box(
@@ -56,7 +56,7 @@ ui <- dashboardPage(
                             status = "primary",
                             solidHeader = TRUE,
                             selectInput("second_water", label = NULL, choices = brands, selected = "Bucovina"),
-                            numericInput("second_coef", label = "Proportion %", 37.5, min = 0, max = 100, step = 1)
+                            numericInput("second_coef", label = "Proportion %", 50, min = 0, max = 100, step = 1)
                         ),
                         
                         box(
@@ -65,7 +65,7 @@ ui <- dashboardPage(
                             status = "primary",
                             solidHeader = TRUE,
                             selectInput("third_water", label = NULL, choices = brands, selected = "Izvorul Minunilor"),
-                            numericInput("third_coef", label = "Proportion %", 37.5, min = 0, max = 100, step = 1)
+                            numericInput("third_coef", label = "Proportion %", 30, min = 0, max = 100, step = 1)
                         ),
                         
                         box(
@@ -131,7 +131,7 @@ ui <- dashboardPage(
                         title = "Min Hardness",
                         status = "primary",
                         solidHeader = TRUE,
-                        numericInput("min_hard", label = NULL, 60, min = 0, max = 220, step = 10)
+                        numericInput("min_hard", label = NULL, 68, min = 0, max = 220, step = 10)
                     ),
                     
                     box(
@@ -139,7 +139,7 @@ ui <- dashboardPage(
                         title = "Max Hardness",
                         status = "primary",
                         solidHeader = TRUE,
-                        numericInput("max_hard", label = NULL, 80, min = 0, max = 220, step = 12)
+                        numericInput("max_hard", label = NULL, 70, min = 0, max = 220, step = 12)
                     ),
                         
                     box(
@@ -161,13 +161,13 @@ ui <- dashboardPage(
                     )
                 )
         
-            ),
-            
-            tabItem(
-                
-                tabName = "details",
-                includeHTML("details_fixed.html")
             )
+            
+            # tabItem(
+            #     
+            #     tabName = "details",
+            #     includeHTML("details_fixed.html")
+            # )
             
         )
     )
