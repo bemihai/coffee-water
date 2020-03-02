@@ -50,6 +50,7 @@ is_triangle <- function(A, B, C, delta) {
     }
 }
 
+# is_triangle(c(35, 33), c(59, 57), c(20, 171), 1500)
 
 # check if a triangle [A, B, C] intersects a target alkalinity line x = target (parallel to Oy)
 is_triangle_sca <- function(A, B, C, x){
@@ -63,6 +64,8 @@ is_triangle_sca <- function(A, B, C, x){
   }
 }
 
+# is_triangle_sca(c(35, 33), c(59, 57), c(20, 171), 40)
+
 
 # compute the intersection of a triangle with a target alkalinity line x = target given as coord y1, y2
 compute_triangle_sca <- function(A, B, C, x) {
@@ -72,6 +75,8 @@ compute_triangle_sca <- function(A, B, C, x) {
   coord <- c(AB = y1, BC = y2, CA = y3)
   return(coord)
 }
+
+# compute_triangle_sca(c(35, 33), c(59, 57), c(20, 171), 40)
 
 
 # compute baricentric coordinates for a point P relative to a triangle (A, B, C)
@@ -83,7 +88,7 @@ compute_baricentric <- function(A, B, C, P){
   return(bari_coord)
 }
 
-
+# compute_baricentric(c(35, 33), c(59, 57), c(20, 171), c(40, 77))
 
 
 

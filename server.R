@@ -216,9 +216,20 @@ shinyServer(function(input, output) {
                    
                    incProgress(1, detail = "Finish")
                    recipes$recipes <- bind_rows(dbl_recipes, trpl_recipes) %>% 
-                     rename(Alkalinity = alkalinity, Hardness = hardness, Ratio = ratio, `Parts %` = Parts) %>% 
+                     rename(
+                       Alkalinity = alkalinity, 
+                       Hardness = hardness, 
+                       Ratio = ratio, 
+                       `Parts %` = Parts
+                       ) %>% 
                      mutate_if(is.numeric, list(~round(., 1))) %>% 
                      mutate_at(vars(TDS, Alkalinity, Hardness), list(round)) %>% 
+                     mutate(
+                       Ca2 = round(100*Ca2/Hardness),
+                       Mg2 = round(100*Mg2/Hardness)
+                       ) %>% 
+                     rename(`Ca %` = Ca2, `Mg %` = Mg2) %>% 
+                     select(Brands:TDS, Alkalinity, Hardness, Ratio, everything()) %>% 
                      arrange(Hardness)
                  })
   })

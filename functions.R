@@ -86,7 +86,7 @@ triple_recipes <- function(data, target, h_min, h_max) {
         C <- c(data$alkalinity[k], data$hardness[k])
         
         # check if the triangle is not trivial (area > 2000)
-        if (is_triangle(A, B, C, 2000)) {
+        if (is_triangle(A, B, C, 1500)) {
           # check if there is a recipe like this
           if (is_triangle_sca(A, B, C, target)) {
             # compute coordinates of the intersection segment
@@ -94,7 +94,7 @@ triple_recipes <- function(data, target, h_min, h_max) {
             # choose 5 hardness values on the segment 
             sh_min <- min(segment[2], segment[4])
             sh_max <- max(segment[2], segment[4])
-            h_values <- seq(sh_min, sh_max, length.out = 7)[2:6]
+            h_values <- seq(sh_min, sh_max, by = 2)
             # keep only those inside the range
             h_values <- h_values[h_values >= h_min & h_values <= h_max]
             # for each value, compute baricentic coordinates 
