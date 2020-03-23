@@ -17,6 +17,11 @@ source("data.R")
 
 # Water for Coffee
 
+## Introduction
+
+For coffee brewing, we can think of these minerals existing in two broad categories, General Hardness (GH) and Carbonate Hardness (KH). For natural water hardness, the two most important GH ions are Magnesium and Calcium. Magnesium has a very strong attraction to natural acid molecules, so has a huge effect on perceived acidity in coffee, pulling out flavours we like to describe as fruits in coffee, normally sharper acidities like citrus and forest berries. Calcium has a slightly weaker interaction, so tends to enhance softer acidities like strawberry and cherry, while also directly enhancing body. The final piece in the puzzle is KH, which has a slightly more complicated interaction. Through a phenomenon known as buffering, the carbonate hardness tries to keep the pH of the water around 7, which is neutral. This means that controlling KH is very important. Too little, and the coffee tastes unbalanced and sharply acidic, no matter what brewing parameters are changed. Too much, and it is impossible to perceive any acidity in the coffee, leaving a flat and dull cup.
+
+
 ## Water composition
 
 ### pH and Carbon Dioxode

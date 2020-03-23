@@ -1,0 +1,10 @@
+Brands,Parts %,pH,Ca,Mg,HCO3,K,Na,Cl,SO4,NO3,TDS,Alkalinity,Hardness,Ratio,Ca %,Mg %
+Distilled water + Smart Water + Perla Harghitei,55 % + 33 % + 12 %,7.2,34.3,3,47.2,1.7,0.8,2.1,2.8,0,120,39,98,2.5,87,13
+Distilled water + Smart Water + San Benedetto,48 % + 39 % + 13 %,7.3,30.5,5.6,47.8,1.9,0.8,0.3,1.3,1.2,116,39,99,2.5,77,23
+Distilled water + Smart Water + Aqua Panna,28 % + 34 % + 38 %,7.6,33,4,48.4,1.9,2.5,3,9,1.1,125,40,99,2.5,83,17
+Distilled water + Aqua Carpatica 2L + Smart Water,42 % + 18 % + 40 %,7.4,33,4.2,48.8,1.8,0.1,0,0.8,0.3,112,40,100,2.5,82,17
+Distilled water + Aqua Carpatica 5L + Smart Water,25 % + 34 % + 41 %,7.4,33.3,4.1,48.8,1.9,0.8,0,0.8,1,124,40,100,2.5,83,17
+Distilled water + Borsec + Smart Water,49 % + 12 % + 39 %,7.2,31.3,5.2,48.3,1.8,0.3,0,0.8,0,114,40,100,2.5,78,21
+Distilled water + Smart Water + Evian,50 % + 39 % + 11 %,7.2,32.6,4.6,49,1.9,0.7,1.1,2.3,0.4,120,40,100,2.5,81,19
+Aqua Carpatica 5L + Bucovina + Smart Water,19 % + 40 % + 41 %,7.4,33.3,4.1,48.7,2.4,1.7,2,2.4,2.1,138,40,100,2.5,83,17
+Bucovina + Vittel + Smart Water,58 % + 6 % + 36 %,7.4,32.9,4.3,48.3,2.7,2.2,3.1,10.2,2.3,144,40,100,2.5,82,18
