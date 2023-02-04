@@ -15,8 +15,8 @@ chemical_composition <- function(df){
       Ca2 = 2.497 * Ca,                                                       # Calcium hardness (ppm as CaCO3)         
       Mg2 = 4.118 * Mg,                                                       # Magnesium hardness (ppm as CaCO3)
       hardness = Ca2 + Mg2,                                                   # total hardness (ppm as CaCO3)
-      ratio = hardness/alkalinity,                                            # hardness/alkalinity ratio
-      ratio = if_else(!is.na(ratio), ratio, 0)
+      ratio = hardness/alkalinity,                                # hardness/alkalinity ratio
+      ratio = if_else(as.logical(!is.na(ratio)), ratio, 0)
     )
   return(df)
 }

@@ -22,7 +22,6 @@ ui <- dashboardPage(
         )
     ),
     
-    
     dashboardBody(
         
         useShinyalert(),

@@ -50,28 +50,28 @@ shinyServer(function(input, output) {
       summarise(hard = max(hardness)) %>% 
       pull()
     
-    val$alk_icon <- case_when(val$recipe$alkalinity < 35 ~ "thumbs-down",
-                              val$recipe$alkalinity < 39 ~ "hand-point-right",
-                              val$recipe$alkalinity < 41 ~ "thumbs-up",
-                              val$recipe$alkalinity < 45 ~ "hand-point-right",
+    val$alk_icon <- case_when(as.logical(val$recipe$alkalinity < 35) ~ "thumbs-down",
+                              as.logical(val$recipe$alkalinity < 39) ~ "hand-point-right",
+                              as.logical(val$recipe$alkalinity < 41) ~ "thumbs-up",
+                              as.logical(val$recipe$alkalinity < 45) ~ "hand-point-right",
                               TRUE ~ "thumbs-down")
 
-    val$alk_color <- case_when(val$recipe$alkalinity < 35 ~ "red",
-                              val$recipe$alkalinity < 39 ~ "yellow",
-                              val$recipe$alkalinity < 41 ~ "green",
-                              val$recipe$alkalinity < 45 ~ "yellow",
+    val$alk_color <- case_when(as.logical(val$recipe$alkalinity < 35) ~ "red",
+                              as.logical(val$recipe$alkalinity < 39) ~ "yellow",
+                              as.logical(val$recipe$alkalinity < 41) ~ "green",
+                              as.logical(val$recipe$alkalinity < 45) ~ "yellow",
                               TRUE ~ "red")
     
-    val$hard_icon <- case_when(val$recipe$hardness < 40 ~ "thumbs-down",
-                              val$recipe$hardness < 60 ~ "hand-point-right",
-                              val$recipe$hardness < 80 ~ "thumbs-up",
-                              val$recipe$hardness < 120 ~ "hand-point-right",
+    val$hard_icon <- case_when(as.logical(val$recipe$hardness < 40) ~ "thumbs-down",
+                              as.logical(val$recipe$hardness < 60) ~ "hand-point-right",
+                              as.logical(val$recipe$hardness < 80) ~ "thumbs-up",
+                              as.logical(val$recipe$hardness < 120) ~ "hand-point-right",
                               TRUE ~ "thumbs-down")
     
-    val$hard_color <- case_when(val$recipe$hardness < 40 ~ "red",
-                               val$recipe$hardness < 60 ~ "yellow",
-                               val$recipe$hardness < 80 ~ "green",
-                               val$recipe$hardness < 120 ~ "yellow",
+    val$hard_color <- case_when(as.logical(val$recipe$hardness < 40) ~ "red",
+                               as.logical(val$recipe$hardness < 60) ~ "yellow",
+                               as.logical(val$recipe$hardness < 80) ~ "green",
+                               as.logical(val$recipe$hardness < 120) ~ "yellow",
                                TRUE ~ "red")
 
   })
